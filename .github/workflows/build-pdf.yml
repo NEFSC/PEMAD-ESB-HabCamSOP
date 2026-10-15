@@ -20,51 +20,28 @@ jobs:
         with:
           tinytex: true
 
-      # Step 1: Quarto generates the LaTeX source files in ~25 seconds
-      - name: Render Book to LaTeX Source
-        run: quarto render --to latex --verbose
+      # Generates the complete 35-chapter PDF via XeLaTeX
+      - name: Render Master PDF
+        timeout-minutes: 20
+        run: quarto render --to pdf --verbose
 
-      # Step 2: Compile with raw XeLaTeX (streams every page live to your screen)
-      - name: Compile PDF with XeLaTeX (Live Streaming)
-        run: |
-          TEX_FILE=$(find _book -name "*.tex" | head -n 1)
-          if [ -z "$TEX_FILE" ]; then
-            echo "ERROR: No .tex file found in _book!"
-            find . -name "*.tex"
-            exit 1
-          fi
-
-          TEX_DIR=$(dirname "$TEX_FILE")
-          TEX_BASE=$(basename "$TEX_FILE")
-          echo "Found LaTeX source: $TEX_BASE in $TEX_DIR"
-
-          cd "$TEX_DIR"
-
-          echo "=== PASS 1: Layout and Graphic Placement ==="
-          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
-
-          echo "=== PASS 2: Table of Contents & Cross-References ==="
-          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
-
-          COMPILED_PDF=$(ls *.pdf | head -n 1)
-          echo "Successfully compiled: $COMPILED_PDF"
-          cp "$COMPILED_PDF" "$GITHUB_WORKSPACE/HabCam_SOP.pdf"
-
-      # Step 3: Commit master PDF to repository root
+      # Copies the generated PDF to root and commits it
       - name: Save PDF to Repository Root
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          cp _book/*.pdf ./HabCam_SOP.pdf
           git add HabCam_SOP.pdf
           git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf [skip ci]"
           git push
 
-      # Step 4: Render HTML and deploy to GitHub Pages
-      - name: Render HTML and Publish
+      # Builds the HTML website and copies HabCam_SOP.pdf into the distribution bundle
+      - name: Render HTML and Prepare Site
         run: |
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
 
+      # Publishes both the HTML site and the downloadable PDF live to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
