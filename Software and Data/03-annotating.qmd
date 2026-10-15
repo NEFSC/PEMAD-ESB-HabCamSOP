@@ -4,28 +4,58 @@ This section provides background on the annotator interface design, key workflow
 
 Review the interactive slide deck below for step-by-step annotation guidelines and species identification standards.
 
+::: {.content-visible when-format="html"}
 {{< include training-carousel.html >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+*(Interactive slide deck available on the online SOP website.)*
+:::
 
 ## Annotation Quiz
 
 Put your training into practice before starting live annotation. Work through the self-assessment quiz below to verify your understanding of species identification criteria, bounding box conventions, and quality control flags.
 
+::: {.content-visible when-format="html"}
 {{< include carousel-habcam-annotation-quiz-2026.html >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+*(Interactive quiz available on the online SOP website.)*
+:::
 
 ## Species Guide: Seastars
 
 PLACEHOLDER Explain when and why we annotate these...
 
+::: {.content-visible when-format="html"}
 {{< include carousel-habcam_id_guide_seastars.html >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+*(Species identification carousel available on the online SOP website.)*
+:::
 
 ## Species Guide: Fishes
 
 PLACEHOLDER Explain when and why we annotate these...
 
+::: {.content-visible when-format="html"}
 {{< include carousel-habcam_id_guide_fishes.html >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+*(Species identification carousel available on the online SOP website.)*
+:::
 
 ## Species Guide: Invertebrates
 
 PLACEHOLDER Explain when and why we annotate these...
 
+::: {.content-visible when-format="html"}
 {{< include carousel-habcam_id_guide_inverts.html >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+*(Species identification carousel available on the online SOP website.)*
+:::
