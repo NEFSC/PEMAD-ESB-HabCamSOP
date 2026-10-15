@@ -105,7 +105,7 @@ format:
     number-sections: false
     fig-align: center
     lightbox: true
-pdf:
+  pdf:
     pdf-engine: xelatex
     default-image-extension: ""
     output-file: "HabCam_SOP.pdf"
