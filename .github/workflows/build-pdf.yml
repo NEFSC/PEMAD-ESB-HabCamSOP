@@ -20,8 +20,8 @@ jobs:
         with:
           tinytex: true
 
-      - name: Render Full Book (PDF and HTML)
-        run: quarto render
+      - name: Render Master PDF
+        run: quarto render --to pdf --verbose
 
       - name: Save PDF to Repository Root
         run: |
