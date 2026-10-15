@@ -1,6 +1,7 @@
 on:
   push:
     branches: main
+  workflow_dispatch:
 
 name: Render and Publish Quarto Book
 
@@ -17,6 +18,10 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      # Required for compiling the PDF:
+      - name: Install TinyTeX
+        uses: quarto-dev/quarto-actions/install-tinytex@v2
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
