@@ -1,0 +1,41 @@
+name: Build Master PDF (On Demand)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto and TinyTeX
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Render Full Book (PDF and HTML)
+        run: quarto render
+
+      - name: Save PDF to Repository Root
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          cp _book/HabCam_SOP.pdf ./HabCam_SOP.pdf
+          git add HabCam_SOP.pdf
+          git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf [skip ci]"
+          git push
+
+      - name: Publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
