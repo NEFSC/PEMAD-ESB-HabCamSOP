@@ -11,14 +11,21 @@ permissions:
 jobs:
   build-pdf:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Quarto and TinyTeX
+      - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          tinytex: true
+          tinytex: false
+
+      - name: Set up TinyTeX
+        uses: r-lib/actions/setup-tinytex@v2
 
       - name: Install Python Table & Image Tools
         run: pip install beautifulsoup4 markdownify requests
@@ -45,7 +52,6 @@ jobs:
                   soup = BeautifulSoup(content, 'html.parser')
                   for table in soup.find_all('table'):
                       md_table = md(str(table), strip=['style'])
-                      # Ensure leading and trailing blank lines so Pandoc parses as table
                       content = content.replace(str(table), f"\n\n{md_table.strip()}\n\n")
                       modified = True
 
@@ -110,7 +116,6 @@ jobs:
 
       - name: Render HTML and Prepare Site
         run: |
-          # Discard local file transformations before HTML build
           git checkout -- .
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
