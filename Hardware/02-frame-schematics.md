@@ -49,40 +49,20 @@ To maintain structural integrity during tow operations and cushion mechanical im
 
 ---
 
-<div align="center">
-
 ### Frame Body Schematics
 
-<img width="822" height="633" alt="Frame_1" src="https://github.com/user-attachments/assets/038bf5c3-27d2-4678-a678-dbfe66920244" />
-<p><b>Frame Body 1</b></p>
+![Frame Body 1](https://github.com/user-attachments/assets/038bf5c3-27d2-4678-a678-dbfe66920244){width="85%"}
 
-<br>
+![Frame Body 2](https://github.com/user-attachments/assets/5a0bbe8b-fefe-4fb1-aa54-fc83ea8066f4){width="85%"}
 
-<img width="864" height="668" alt="Frame_2" src="https://github.com/user-attachments/assets/5a0bbe8b-fefe-4fb1-aa54-fc83ea8066f4" />
-<p><b>Frame Body 2</b></p>
+![Frame Body 3](https://github.com/user-attachments/assets/15ccbcaa-6f22-42e5-8f58-ea3f4d336b77){width="85%"}
 
-<br>
+![Frame Body 4](https://github.com/user-attachments/assets/d606768b-abba-4867-8b2a-76894ed717aa){width="85%"}
 
-<img width="864" height="668" alt="Frame_3" src="https://github.com/user-attachments/assets/15ccbcaa-6f22-42e5-8f58-ea3f4d336b77" />
-<p><b>Frame Body 3</b></p>
-
-<br>
-
-<img width="864" height="668" alt="Frame_4" src="https://github.com/user-attachments/assets/d606768b-abba-4867-8b2a-76894ed717aa" />
-<p><b>Frame Body 4</b></p>
-
-<br>
-<hr>
-<br>
+---
 
 ### Tail Schematics
 
-<img width="864" height="668" alt="Tail_1" src="https://github.com/user-attachments/assets/4534ddc4-1e33-4648-af17-b9180c6e0f16" />
-<p><b>Tail 1</b></p>
+![Tail 1](https://github.com/user-attachments/assets/4534ddc4-1e33-4648-af17-b9180c6e0f16){width="85%"}
 
-<br>
-
-<img width="864" height="668" alt="Tail_2" src="https://github.com/user-attachments/assets/ef7ecaf9-17cf-4710-96a1-41d5fe9d4c01" />
-<p><b>Tail 2</b></p>
-
-</div>
+![Tail 2](https://github.com/user-attachments/assets/ef7ecaf9-17cf-4710-96a1-41d5fe9d4c01){width="85%"}
