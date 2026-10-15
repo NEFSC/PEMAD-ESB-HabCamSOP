@@ -20,44 +20,52 @@ jobs:
         with:
           tinytex: true
 
-      - name: Render Master PDF (Live Streamed)
-        timeout-minutes: 10
+      # Step 1: Quarto generates the LaTeX source files in ~25 seconds
+      - name: Render Book to LaTeX Source
+        run: quarto render --to latex --verbose
+
+      # Step 2: Compile with raw XeLaTeX (streams every page live to your screen)
+      - name: Compile PDF with XeLaTeX (Live Streaming)
         run: |
-          # Kill background watcher automatically when the step finishes
-          trap 'kill $(jobs -p) 2>/dev/null || true' EXIT
+          TEX_FILE=$(find _book -name "*.tex" | head -n 1)
+          if [ -z "$TEX_FILE" ]; then
+            echo "ERROR: No .tex file found in _book!"
+            find . -name "*.tex"
+            exit 1
+          fi
 
-          # Stream the compiler log live to the console in real time
-          python3 - << 'EOF' &
-          import time, glob, sys
-          print(">> Waiting for XeLaTeX compiler log to open...", flush=True)
-          for _ in range(180):
-              logs = [f for f in glob.glob("**/*.log", recursive=True) if not f.startswith(".git")]
-              if logs:
-                  log_file = logs[0]
-                  print(f"\n=== LIVE COMPILER STREAM STARTED ({log_file}) ===\n", flush=True)
-                  with open(log_file, "r", errors="replace") as f:
-                      while True:
-                          line = f.readline()
-                          if line:
-                              sys.stdout.write(line)
-                              sys.stdout.flush()
-                          else:
-                              time.sleep(0.3)
-              time.sleep(1)
-          EOF
+          TEX_DIR=$(dirname "$TEX_FILE")
+          TEX_BASE=$(basename "$TEX_FILE")
+          echo "Found LaTeX source: $TEX_BASE in $TEX_DIR"
 
-          quarto render --to pdf --verbose
+          cd "$TEX_DIR"
 
+          echo "=== PASS 1: Layout and Graphic Placement ==="
+          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
+
+          echo "=== PASS 2: Table of Contents & Cross-References ==="
+          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
+
+          COMPILED_PDF=$(ls *.pdf | head -n 1)
+          echo "Successfully compiled: $COMPILED_PDF"
+          cp "$COMPILED_PDF" "$GITHUB_WORKSPACE/HabCam_SOP.pdf"
+
+      # Step 3: Commit master PDF to repository root
       - name: Save PDF to Repository Root
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          cp _book/*.pdf ./HabCam_SOP.pdf
           git add HabCam_SOP.pdf
           git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf [skip ci]"
           git push
 
-      - name: Publish to GitHub Pages
+      # Step 4: Render HTML and deploy to GitHub Pages
+      - name: Render HTML and Publish
+        run: |
+          quarto render --to html
+          cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
+
+      - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
