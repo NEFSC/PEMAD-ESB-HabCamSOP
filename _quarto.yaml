@@ -96,6 +96,7 @@ book:
 
 format:
   html:
+    default-image-extension: ""
     theme: cosmo
     toc: true
     toc-depth: 2
