@@ -105,9 +105,4 @@ format:
     # Temporarily commented out to ensure missing files don't block page render:
     # css: styles.css
     # include-in-header: header.html
-  pdf:
-    output-file: "HabCam_SOP.pdf"
-    documentclass: report
-    toc: true
-    number-sections: true
-    colorlinks: true
+
