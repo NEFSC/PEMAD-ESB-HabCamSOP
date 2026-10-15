@@ -20,28 +20,101 @@ jobs:
         with:
           tinytex: true
 
-      # Generates the complete 35-chapter PDF via XeLaTeX
+      - name: Install Python Table & Image Tools
+        run: pip install beautifulsoup4 markdownify requests
+
+      # Converts HTML tables & images to Markdown and localizes remote assets
+      - name: Pre-process Tables and Localize Images
+        run: |
+          python3 - << 'EOF'
+          import os, re, requests
+          from bs4 import BeautifulSoup
+          from markdownify import markdownify as md
+
+          os.makedirs('_pdf_assets', exist_ok=True)
+          headers = {'User-Agent': 'Mozilla/5.0'}
+
+          def process_file(filepath):
+              with open(filepath, 'r', encoding='utf-8') as f:
+                  content = f.read()
+
+              modified = False
+
+              # 1. Convert raw HTML <table> blocks into Markdown pipe tables
+              if '<table' in content.lower():
+                  soup = BeautifulSoup(content, 'html.parser')
+                  for table in soup.find_all('table'):
+                      md_table = md(str(table), strip=['style'])
+                      # Ensure leading and trailing blank lines so Pandoc parses as table
+                      content = content.replace(str(table), f"\n\n{md_table.strip()}\n\n")
+                      modified = True
+
+              # 2. Convert <img src="..." alt="..."> HTML tags into Markdown syntax
+              img_tag_regex = r'<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>'
+              def replace_img(match):
+                  tag = match.group(0)
+                  soup = BeautifulSoup(tag, 'html.parser').find('img')
+                  src = soup.get('src', '')
+                  alt = soup.get('alt', 'Figure')
+                  return f"\n\n![{alt}]({src})\n\n"
+
+              if '<img' in content.lower():
+                  content = re.sub(img_tag_regex, replace_img, content, flags=re.IGNORECASE)
+                  modified = True
+
+              # 3. Download GitHub attachment URLs and replace with local paths
+              asset_regex = r'https://github\.com/user-attachments/assets/([a-zA-Z0-9-]+)'
+              matches = set(re.findall(asset_regex, content))
+              for uuid in matches:
+                  local_path = f"_pdf_assets/{uuid}.png"
+                  if not os.path.exists(local_path):
+                      url = f"https://github.com/user-attachments/assets/{uuid}"
+                      try:
+                          r = requests.get(url, headers=headers, timeout=30)
+                          if r.status_code == 200 and len(r.content) > 0:
+                              with open(local_path, 'wb') as out:
+                                  out.write(r.content)
+                      except Exception as e:
+                          print(f"Failed to download asset {uuid}: {e}")
+
+                  rel_path = os.path.relpath(local_path, os.path.dirname(filepath)).replace('\\', '/')
+                  content = re.sub(rf'https://github\.com/user-attachments/assets/{uuid}', rel_path, content)
+                  modified = True
+
+              if modified:
+                  with open(filepath, 'w', encoding='utf-8') as f:
+                      f.write(content)
+
+          for root, dirs, files in os.walk('.'):
+              if any(skip in root for skip in ['_book', '_site', '.git', '_pdf_assets']):
+                  continue
+              for f in files:
+                  if f.endswith('.md') or f.endswith('.qmd'):
+                      process_file(os.path.join(root, f))
+
+          print("Successfully converted HTML tables and localized remote images.")
+          EOF
+
       - name: Render Master PDF
         timeout-minutes: 20
         run: quarto render --to pdf --verbose
 
-      # Copies the generated PDF to root and commits it
       - name: Save PDF to Repository Root
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           cp _book/*.pdf ./HabCam_SOP.pdf
           git add HabCam_SOP.pdf
-          git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf [skip ci]"
+          git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf with images and tables [skip ci]"
           git push
 
-      # Builds the HTML website and copies HabCam_SOP.pdf into the distribution bundle
       - name: Render HTML and Prepare Site
         run: |
+          # Discard local file transformations before HTML build
+          git checkout -- .
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
 
-      # Publishes both the HTML site and the downloadable PDF live to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
