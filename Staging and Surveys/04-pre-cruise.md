@@ -73,9 +73,9 @@ toc-depth: 3
 
 ### Staging {.unlisted}
 
-- [ ] [Mounting the weak link](02-hardware-and-schematics.md#weak-link)
-- [ ] [Splice fiber optics](02-hardware-and-schematics.md#fiber-optic-termination)
-- [ ] [Do the pull test](02-hardware-and-schematics.md#pull-test)
+- [ ] [Mounting the weak link](../Hardware/02-weak-link.md)
+- [ ] [Splice fiber optics](../Hardware/02-fiber-termination.md)
+- [ ] [Do the pull test](../Hardware/02-fiber-pull-test.md)
 - [ ] Load vehicle
 - [ ] Load equipment
 - [ ] Setup stations
@@ -693,12 +693,11 @@ Send formal notification emails to all selected scientific personnel. Attach the
 > * **Max Operational Wind (HabCam Deployment Limit):** Sustained winds &gt; 25 knots or seas &gt; 6 ft require halting vehicle towing operations and recovering the sled.
 > * **Weather Contingency Communication:** In the event of forecasted adverse weather, updates will be issued via email/SMS every 6 hours by the Chief Scientist.
 
-
 ### Staging Protocols {#sec-staging-detail}
 
-- [ ] [Mounting the weak link](02-weak-link.md)
-- [ ] [Splice fiber optics](02-fiber-termination.md)
-- [ ] [Do the pull test](02-fiber-pull-test.md)
+- [ ] [Mounting the weak link](../Hardware/02-weak-link.md)
+- [ ] [Splice fiber optics](../Hardware/02-fiber-termination.md)
+- [ ] [Do the pull test](../Hardware/02-fiber-pull-test.md)
 - [ ] Load vehicle
 - [ ] Load equipment
 - [ ] Setup stations
@@ -706,13 +705,13 @@ Send formal notification emails to all selected scientific personnel. Attach the
 - [ ] Chanos sensor dissolved inorganic carbon sensor (PH, DIC, total alkalinity)
 
 #### Mounting the Weak Link {#sec-staging-weak-link}
-Refer to [02 Weak Link Assembly](02-weak-link.md) for detailed instructions.
+Refer to [02 Weak Link Assembly](../Hardware/02-weak-link.md) for detailed instructions.
 
 #### Splice Fiber Optics {#sec-staging-fiber-splicing}
-Refer to [02 Fiber Termination](02-fiber-termination.md) for detailed instructions.
+Refer to [02 Fiber Termination](../Hardware/02-fiber-termination.md) for detailed instructions.
 
 #### Do the Pull Test {#sec-staging-pull-test}
-Refer to [02 Fiber Pull Test Protocol](02-fiber-pull-test.md) for detailed instructions.
+Refer to [02 Fiber Pull Test Protocol](../Hardware/02-fiber-pull-test.md) for detailed instructions.
 
 #### Load Vehicle {#sec-staging-load-vehicle}
 *[Insert details for vehicle deck loading, crane hoisting protocols, tie-down locations, and secure deck placement here]*
