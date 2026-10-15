@@ -107,7 +107,7 @@ format:
     # include-in-header: header.html
   pdf:
     output-file: "HabCam_SOP.pdf"
-    documentclass: scrreprt
+    documentclass: report
     toc: true
     number-sections: true
     colorlinks: true
