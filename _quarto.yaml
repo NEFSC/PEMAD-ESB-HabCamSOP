@@ -107,6 +107,9 @@ format:
     lightbox: true
   pdf:
     pdf-engine: xelatex
+    pdf-engine-opts:
+      - "-interaction=nonstopmode"
+      - "-halt-on-error"
     default-image-extension: ""
     output-file: "HabCam_SOP.pdf"
     documentclass: report
