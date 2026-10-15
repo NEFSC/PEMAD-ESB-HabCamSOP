@@ -20,51 +20,6 @@ jobs:
         with:
           tinytex: true
 
-      - name: Localize Images for PDF Compilation
-        run: |
-          python3 - << 'EOF'
-          import os, re, urllib.request
-
-          regex = r'https://github\.com/user-attachments/assets/([a-zA-Z0-9-]+)'
-          os.makedirs('_temp_assets', exist_ok=True)
-
-          files = []
-          for root, _, filenames in os.walk('.'):
-              if any(skip in root for skip in ['_site', '_book', '.git']):
-                  continue
-              for f in filenames:
-                  if f.endswith('.md') or f.endswith('.qmd'):
-                      files.append(os.path.join(root, f))
-
-          urls = set()
-          for path in files:
-              with open(path, 'r', encoding='utf-8') as f:
-                  for m in re.findall(regex, f.read()):
-                      urls.add(m)
-
-          print(f"Localizing {len(urls)} remote attachments...")
-          headers = {'User-Agent': 'Mozilla/5.0'}
-          for uuid in urls:
-              dest = f"_temp_assets/{uuid}.png"
-              if not os.path.exists(dest):
-                  try:
-                      req = urllib.request.Request(f"https://github.com/user-attachments/assets/{uuid}", headers=headers)
-                      with urllib.request.urlopen(req) as resp, open(dest, 'wb') as out:
-                          out.write(resp.read())
-                  except Exception as e:
-                      print(f"Skipping {uuid}: {e}")
-
-          for path in files:
-              with open(path, 'r', encoding='utf-8') as f:
-                  content = f.read()
-              rel = os.path.relpath('_temp_assets', os.path.dirname(path)).replace('\\', '/')
-              updated = re.sub(regex, rf'{rel}/\1.png', content)
-              if updated != content:
-                  with open(path, 'w', encoding='utf-8') as f:
-                      f.write(updated)
-          print("All images localized successfully.")
-          EOF
-
       - name: Render Master PDF
         run: quarto render --to pdf --verbose
 
