@@ -106,6 +106,7 @@ format:
     fig-align: center
     lightbox: true
   pdf:
+    default-image-extension: "" 
     output-file: "HabCam_SOP.pdf"
     documentclass: report
     toc: true
