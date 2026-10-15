@@ -1,4 +1,5 @@
 name: Build Master PDF (On Demand)
+name: Build Master PDF (On Demand)
 
 on:
   workflow_dispatch:
@@ -20,15 +21,33 @@ jobs:
         with:
           tinytex: true
 
-      - name: Render Master PDF
+      - name: Render Master PDF (Live Streamed)
         timeout-minutes: 10
-        run: quarto render --to pdf --verbose
-
-      - name: Show LaTeX Log if Render Failed
-        if: failure()
         run: |
-          echo "=== DUMPING COMPILER LOG ==="
-          find . -name "*.log" -exec tail -n 100 {} +
+          # Kill background watcher automatically when the step finishes
+          trap 'kill $(jobs -p) 2>/dev/null || true' EXIT
+
+          # Stream the compiler log live to the console in real time
+          python3 - << 'EOF' &
+          import time, glob, sys
+          print(">> Waiting for XeLaTeX compiler log to open...", flush=True)
+          for _ in range(180):
+              logs = [f for f in glob.glob("**/*.log", recursive=True) if not f.startswith(".git")]
+              if logs:
+                  log_file = logs[0]
+                  print(f"\n=== LIVE COMPILER STREAM STARTED ({log_file}) ===\n", flush=True)
+                  with open(log_file, "r", errors="replace") as f:
+                      while True:
+                          line = f.readline()
+                          if line:
+                              sys.stdout.write(line)
+                              sys.stdout.flush()
+                          else:
+                              time.sleep(0.3)
+              time.sleep(1)
+          EOF
+
+          quarto render --to pdf --verbose
 
       - name: Save PDF to Repository Root
         run: |
