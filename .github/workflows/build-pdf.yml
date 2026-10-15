@@ -1,3 +1,4 @@
+YAML
 name: Build Master PDF (On Demand)
 
 on:
@@ -21,7 +22,17 @@ jobs:
           tinytex: true
 
       - name: Render Master PDF
-        run: quarto render --to pdf --verbose
+        timeout-minutes: 8
+        run: |
+          quarto render --to pdf --verbose -- \
+            --pdf-engine-opt="-interaction=nonstopmode" \
+            --pdf-engine-opt="-halt-on-error"
+
+      - name: Show LaTeX Log if Render Failed
+        if: failure()
+        run: |
+          echo "=== DUMPING XELATEX COMPILER LOG ==="
+          find . -name "*.log" -exec tail -n 100 {} +
 
       - name: Save PDF to Repository Root
         run: |
