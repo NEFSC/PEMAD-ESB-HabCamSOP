@@ -1,6 +1,8 @@
 project:
   type: book
   output-dir: _book
+  resources:
+    - "HabCam_SOP.pdf"
 
 book:
   title: "HabCam SOP"
@@ -103,7 +105,10 @@ format:
     number-sections: false
     fig-align: center
     lightbox: true
-    # Temporarily commented out to ensure missing files don't block page render:
-    # css: styles.css
-    # include-in-header: header.html
+  pdf:
+    output-file: "HabCam_SOP.pdf"
+    documentclass: report
+    toc: true
+    number-sections: true
+    colorlinks: true
 
