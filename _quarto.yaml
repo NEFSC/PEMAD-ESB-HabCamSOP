@@ -5,6 +5,7 @@ project:
 book:
   title: "HabCam SOP"
   site-url: "https://nefsc.github.io/PEMAD-ESB-HabCamSOP/"
+  downloads: [pdf]
   sidebar:
     logo: "Round Logo.jpg"
     style: "docked"
