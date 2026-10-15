@@ -105,9 +105,14 @@ format:
     number-sections: false
     fig-align: center
     lightbox: true
+  latex:
+    default-image-extension: ""
+    documentclass: report
+    toc: true
+    number-sections: true
+    colorlinks: true
   pdf:
     pdf-engine: xelatex
-    keep-tex: true
     default-image-extension: ""
     documentclass: report
     toc: true
