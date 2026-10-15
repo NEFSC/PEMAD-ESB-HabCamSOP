@@ -107,9 +107,7 @@ format:
     lightbox: true
   pdf:
     pdf-engine: xelatex
-    pdf-engine-opts:
-      - "-interaction=nonstopmode"
-      - "-halt-on-error"
+    keep-tex: true
     default-image-extension: ""
     documentclass: report
     toc: true
