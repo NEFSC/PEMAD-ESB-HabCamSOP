@@ -1,5 +1,4 @@
 name: Build Master PDF (On Demand)
-name: Build Master PDF (On Demand)
 
 on:
   workflow_dispatch:
