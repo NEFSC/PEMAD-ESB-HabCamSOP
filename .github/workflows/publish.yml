@@ -1,17 +1,18 @@
+name: Render and Publish Quarto Book
+
 on:
   push:
-    branches: main
+    branches: [ main ]
   workflow_dispatch:
 
-name: Render and Publish Quarto Book
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -19,9 +20,15 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render and Publish
+      # Explicitly render HTML only — skips PDF and completes in ~35s
+      - name: Render HTML
+        run: quarto render --to html
+
+      # Pushes to gh-pages without re-rendering
+      - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
