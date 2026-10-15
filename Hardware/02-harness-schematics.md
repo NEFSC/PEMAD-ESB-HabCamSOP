@@ -46,7 +46,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ## Individual Cable Specs
 
-### Chanos Cable {#chanos-cable}
+### Chanos Cable 
 
 ![Chanos Cable Schematic](https://github.com/user-attachments/assets/1adccfc7-2298-4c57-984e-4bfab114408a){width="90%"}
 
@@ -75,7 +75,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### Camera Power Ethernet Cable {#camera-power-ethernet-cable}
+### Camera Power Ethernet Cable
 
 ![Camera Power Ethernet Cable Schematic](https://github.com/user-attachments/assets/1adccfc7-2298-4c57-984e-4bfab114408a){width="90%"}
 
@@ -108,7 +108,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### A-Sphere Cable Wiring {#a-sphere-cable-wiring}
+### A-Sphere Cable Wiring
 
 ![A-Sphere Cable Schematic](https://github.com/user-attachments/assets/7b16fff8-3262-47b5-923d-b643877b3de8){width="90%"}
 
@@ -133,7 +133,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### Microstrain Cable {#microstrain-cable}
+### Microstrain Cable
 
 ![Microstrain Cable Schematic](https://github.com/user-attachments/assets/c90159af-3fc6-4f7c-897f-2826acea4ef9){width="90%"}
 
@@ -161,7 +161,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### BlueView Cable {#blueview-cable}
+### BlueView Cable
 
 ![BlueView Cable Schematic](https://github.com/user-attachments/assets/a90c4bdc-8003-4ed6-a2f9-6bcc87025911){width="90%"}
 
@@ -183,7 +183,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### Sonar Altimeter Cable {#sonar-altimeter-cable}
+### Sonar Altimeter Cable
 
 ![Sonar Altimeter Cable Schematic](https://github.com/user-attachments/assets/a46ecd7c-a77a-49b4-9b27-b9b9f1c37974){width="90%"}
 
@@ -212,7 +212,7 @@ To ensure system reliability during sea trials and survey operations, technician
 
 ---
 
-### Eco-Triplet Cable {#eco-triplet-cable}
+### Eco-Triplet Cable
 
 ![Eco-Triplet Cable Schematic](https://github.com/user-attachments/assets/6b8aa09c-f0d6-455f-8388-0fbc7dcf5e35){width="90%"}
 
