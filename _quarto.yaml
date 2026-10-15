@@ -105,11 +105,11 @@ format:
     number-sections: false
     fig-align: center
     lightbox: true
-  pdf:
-    default-image-extension: "" 
+pdf:
+    pdf-engine: xelatex
+    default-image-extension: ""
     output-file: "HabCam_SOP.pdf"
     documentclass: report
     toc: true
     number-sections: true
     colorlinks: true
-
