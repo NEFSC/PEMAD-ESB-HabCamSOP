@@ -27,7 +27,7 @@ jobs:
       - name: Set up TinyTeX
         uses: r-lib/actions/setup-tinytex@v2
 
-      # Converts HTML <table> blocks into Markdown pipe tables in < 1 second
+      # Converts HTML <table> blocks into clean Markdown pipe tables
       - name: Convert HTML Tables to Markdown Pipe Tables
         run: |
           python3 - << 'EOF'
@@ -40,6 +40,7 @@ jobs:
                   for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', html_snippet, flags=re.DOTALL | re.IGNORECASE):
                       cells = []
                       for cell in re.findall(r'<(?:th|td)[^>]*>(.*?)</(?:th|td)>', tr, flags=re.DOTALL | re.IGNORECASE):
+                          # Strip nested tags, normalize whitespace, and escape pipe characters
                           t = re.sub(r'<[^>]+>', ' ', cell)
                           t = ' '.join(t.split()).replace('|', '\\|')
                           cells.append(t)
@@ -76,11 +77,24 @@ jobs:
                               file.write(new_content)
                           count += 1
 
-          print(f"Finished table conversion. Converted tables across {count} chapters.")
+          print(f"Finished table conversion across {count} chapters.")
           EOF
 
+      # Renders PDF with closed stdin (< /dev/null) to prevent any prompt freezes
       - name: Render Master PDF
-        run: quarto render --to pdf --verbose
+        id: render_pdf
+        timeout-minutes: 10
+        run: |
+          quarto render --to pdf --verbose --pdf-engine-opt="-interaction=nonstopmode" --pdf-engine-opt="-halt-on-error" < /dev/null
+
+      # If rendering fails, dumps the exact error and line from the compiler log
+      - name: Show LaTeX Log on Error
+        if: always() && steps.render_pdf.outcome == 'failure'
+        run: |
+          echo "=== SEARCHING COMPILER LOG FOR ERROR LINES ==="
+          find . -name "*.log" -exec grep -n -C 5 "^!" {} + || true
+          echo "=== TAIL OF COMPILER LOG ==="
+          find . -name "*.log" -exec tail -n 80 {} + || true
 
       - name: Save PDF to Repository Root
         run: |
@@ -93,7 +107,6 @@ jobs:
 
       - name: Render HTML and Prepare Site
         run: |
-          # Discard table modifications before building HTML website
           git checkout -- .
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
