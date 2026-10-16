@@ -30,6 +30,7 @@ jobs:
       - name: Install Python Table & Image Tools
         run: pip install beautifulsoup4 markdownify requests pillow
 
+      # 1. Downloads all remote assets locally and converts tables
       - name: Pre-process Tables and Localize Valid Images
         run: |
           python3 - << 'EOF'
@@ -44,7 +45,6 @@ jobs:
           }
 
           def is_valid_image(data):
-              # Check for standard image magic bytes (PNG, JPEG, GIF)
               if data.startswith(b'\x89PNG\r\n\x1a\n'):
                   return True
               if data.startswith(b'\xff\xd8\xff'):
@@ -59,7 +59,7 @@ jobs:
 
               modified = False
 
-              # 1. Convert raw HTML <table> blocks into Markdown pipe tables
+              # Convert raw HTML <table> blocks into Markdown pipe tables
               if '<table' in content.lower():
                   soup = BeautifulSoup(content, 'html.parser')
                   for table in soup.find_all('table'):
@@ -67,7 +67,7 @@ jobs:
                       content = content.replace(str(table), f"\n\n{md_table.strip()}\n\n")
                       modified = True
 
-              # 2. Convert <img src="..." alt="..."> tags to Markdown syntax
+              # Convert <img src="..." alt="..."> tags to Markdown syntax
               img_tag_regex = r'<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>'
               def replace_img(match):
                   tag = match.group(0)
@@ -82,7 +82,7 @@ jobs:
                   content = re.sub(img_tag_regex, replace_img, content, flags=re.IGNORECASE)
                   modified = True
 
-              # 3. Safely download GitHub attachment URLs
+              # Safely download GitHub attachment URLs
               asset_regex = r'https://github\.com/user-attachments/assets/([a-zA-Z0-9-]+)'
               matches = set(re.findall(asset_regex, content))
               for uuid in matches:
@@ -104,7 +104,6 @@ jobs:
                       except Exception as e:
                           print(f"Network error downloading asset {uuid}: {e}")
 
-                  # Only rewrite path if the file was verified and written to disk
                   if download_success:
                       rel_path = os.path.relpath(local_path, os.path.dirname(filepath)).replace('\\', '/')
                       content = re.sub(rf'https://github\.com/user-attachments/assets/{uuid}', rel_path, content)
@@ -124,33 +123,62 @@ jobs:
           print("Successfully processed tables and verified local assets.")
           EOF
 
-      - name: Render Master PDF
-        timeout-minutes: 10
-        run: quarto render --to pdf --verbose
+      # 2. Generates master LaTeX file locally (~20 seconds)
+      - name: Render Book to LaTeX Source
+        run: quarto render --to latex --verbose
 
-      - name: Show LaTeX Log if Render Failed
-        if: failure()
+      # 3. Direct XeLaTeX execution with live streaming to console
+      - name: Compile PDF with XeLaTeX (Live Streaming)
         run: |
-          echo "=== SEARCHING COMPILER LOG FOR ERRORS ==="
-          find . -name "*.log" -exec grep -n -C 5 "^!" {} + || true
-          echo "=== DUMPING LAST 100 LINES OF LATEX LOG ==="
-          find . -name "*.log" -exec tail -n 100 {} + || true
+          TEX_FILE=$(find _book -name "*.tex" | head -n 1)
+          if [ -z "$TEX_FILE" ]; then
+            echo "ERROR: No .tex file found in _book!"
+            find . -name "*.tex"
+            exit 1
+          fi
 
+          TEX_DIR=$(dirname "$TEX_FILE")
+          TEX_BASE=$(basename "$TEX_FILE")
+          echo "Found LaTeX source: $TEX_BASE in $TEX_DIR"
+
+          cd "$TEX_DIR"
+
+          echo "=== PASS 1: Typesetting & Graphics Placement ==="
+          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
+
+          echo "=== PASS 2: Table of Contents & Cross-References ==="
+          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
+
+          COMPILED_PDF=$(ls *.pdf | head -n 1)
+          echo "Successfully compiled: $COMPILED_PDF"
+          cp "$COMPILED_PDF" "$GITHUB_WORKSPACE/HabCam_SOP.pdf"
+
+      # 4. Runs on failure or cancellation to ensure you always see the log
+      - name: Show Compiler Log on Failure
+        if: always() && steps.compile.outcome == 'failure'
+        run: |
+          echo "=== SEARCHING COMPILER LOGS FOR ERRORS ==="
+          find _book -name "*.log" -exec grep -n -C 5 "^!" {} + || true
+          echo "=== DUMPING LAST 100 LINES OF LATEX LOG ==="
+          find _book -name "*.log" -exec tail -n 100 {} + || true
+
+      # 5. Commit master PDF to repository root
       - name: Save PDF to Repository Root
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          cp _book/*.pdf ./HabCam_SOP.pdf
           git add HabCam_SOP.pdf
           git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf with images and tables [skip ci]"
           git push
 
+      # 6. Render clean HTML website and bundle the master PDF
       - name: Render HTML and Prepare Site
         run: |
           git checkout -- .
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
 
+      # 7. Deploy live to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
