@@ -115,7 +115,21 @@ format:
     colorlinks: true
     include-in-header:
       text: |
+        \usepackage{graphicx}
+        \usepackage{adjustbox}
         \usepackage{array}
         \usepackage{longtable}
         \usepackage{booktabs}
-        \renewcommand{\arraystretch}{1.2}
+        
+        % 1. Prevent vertical spacing stretching across pages
+        \raggedbottom
+        
+        % 2. Cap default figure height so photos don't force empty pages
+        \makeatletter
+        \def\maxheight#1{\ifdim\Gin@nat@height>#1 #1\else\Gin@nat@height\fi}
+        \makeatother
+        \setkeys{Gin}{width=\linewidth,height=\maxheight{0.38\textheight},keepaspectratio}
+        
+        % 3. Prevent headings from being orphaned at the bottom of pages
+        \usepackage{needspace}
+        \raggedbottom
