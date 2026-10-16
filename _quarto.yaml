@@ -113,3 +113,9 @@ format:
     toc: true
     number-sections: true
     colorlinks: true
+    include-in-header:
+      text: |
+        \usepackage{array}
+        \usepackage{longtable}
+        \usepackage{booktabs}
+        \renewcommand{\arraystretch}{1.2}
