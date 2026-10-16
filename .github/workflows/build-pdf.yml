@@ -28,10 +28,9 @@ jobs:
         uses: r-lib/actions/setup-tinytex@v2
 
       - name: Install Python Table & Image Tools
-        run: pip install beautifulsoup4 markdownify requests
+        run: pip install beautifulsoup4 markdownify requests pillow
 
-      # Converts HTML tables & images to Markdown and localizes remote assets
-      - name: Pre-process Tables and Localize Images
+      - name: Pre-process Tables and Localize Valid Images
         run: |
           python3 - << 'EOF'
           import os, re, requests
@@ -39,7 +38,20 @@ jobs:
           from markdownify import markdownify as md
 
           os.makedirs('_pdf_assets', exist_ok=True)
-          headers = {'User-Agent': 'Mozilla/5.0'}
+          headers = {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+              'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+          }
+
+          def is_valid_image(data):
+              # Check for standard image magic bytes (PNG, JPEG, GIF)
+              if data.startswith(b'\x89PNG\r\n\x1a\n'):
+                  return True
+              if data.startswith(b'\xff\xd8\xff'):
+                  return True
+              if data.startswith(b'GIF87a') or data.startswith(b'GIF89a'):
+                  return True
+              return False
 
           def process_file(filepath):
               with open(filepath, 'r', encoding='utf-8') as f:
@@ -55,11 +67,13 @@ jobs:
                       content = content.replace(str(table), f"\n\n{md_table.strip()}\n\n")
                       modified = True
 
-              # 2. Convert <img src="..." alt="..."> HTML tags into Markdown syntax
+              # 2. Convert <img src="..." alt="..."> tags to Markdown syntax
               img_tag_regex = r'<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>'
               def replace_img(match):
                   tag = match.group(0)
                   soup = BeautifulSoup(tag, 'html.parser').find('img')
+                  if not soup:
+                      return match.group(0)
                   src = soup.get('src', '')
                   alt = soup.get('alt', 'Figure')
                   return f"\n\n![{alt}]({src})\n\n"
@@ -68,24 +82,33 @@ jobs:
                   content = re.sub(img_tag_regex, replace_img, content, flags=re.IGNORECASE)
                   modified = True
 
-              # 3. Download GitHub attachment URLs and replace with local paths
+              # 3. Safely download GitHub attachment URLs
               asset_regex = r'https://github\.com/user-attachments/assets/([a-zA-Z0-9-]+)'
               matches = set(re.findall(asset_regex, content))
               for uuid in matches:
                   local_path = f"_pdf_assets/{uuid}.png"
-                  if not os.path.exists(local_path):
+                  download_success = False
+
+                  if os.path.exists(local_path) and os.path.getsize(local_path) > 0:
+                      download_success = True
+                  else:
                       url = f"https://github.com/user-attachments/assets/{uuid}"
                       try:
-                          r = requests.get(url, headers=headers, timeout=30)
-                          if r.status_code == 200 and len(r.content) > 0:
+                          r = requests.get(url, headers=headers, timeout=25, allow_redirects=True)
+                          if r.status_code == 200 and is_valid_image(r.content):
                               with open(local_path, 'wb') as out:
                                   out.write(r.content)
+                              download_success = True
+                          else:
+                              print(f"Skipping asset {uuid}: invalid image format or HTTP status {r.status_code}")
                       except Exception as e:
-                          print(f"Failed to download asset {uuid}: {e}")
+                          print(f"Network error downloading asset {uuid}: {e}")
 
-                  rel_path = os.path.relpath(local_path, os.path.dirname(filepath)).replace('\\', '/')
-                  content = re.sub(rf'https://github\.com/user-attachments/assets/{uuid}', rel_path, content)
-                  modified = True
+                  # Only rewrite path if the file was verified and written to disk
+                  if download_success:
+                      rel_path = os.path.relpath(local_path, os.path.dirname(filepath)).replace('\\', '/')
+                      content = re.sub(rf'https://github\.com/user-attachments/assets/{uuid}', rel_path, content)
+                      modified = True
 
               if modified:
                   with open(filepath, 'w', encoding='utf-8') as f:
@@ -98,12 +121,20 @@ jobs:
                   if f.endswith('.md') or f.endswith('.qmd'):
                       process_file(os.path.join(root, f))
 
-          print("Successfully converted HTML tables and localized remote images.")
+          print("Successfully processed tables and verified local assets.")
           EOF
 
       - name: Render Master PDF
-        timeout-minutes: 20
+        timeout-minutes: 10
         run: quarto render --to pdf --verbose
+
+      - name: Show LaTeX Log if Render Failed
+        if: failure()
+        run: |
+          echo "=== SEARCHING COMPILER LOG FOR ERRORS ==="
+          find . -name "*.log" -exec grep -n -C 5 "^!" {} + || true
+          echo "=== DUMPING LAST 100 LINES OF LATEX LOG ==="
+          find . -name "*.log" -exec tail -n 100 {} + || true
 
       - name: Save PDF to Repository Root
         run: |
