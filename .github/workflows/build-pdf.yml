@@ -27,42 +27,56 @@ jobs:
       - name: Set up TinyTeX
         uses: r-lib/actions/setup-tinytex@v2
 
-      # Converts HTML <table> blocks into clean Markdown pipe tables
+      - name: Install Python Parser
+        run: pip install beautifulsoup4
+
+      # Parses and converts all HTML tables to Markdown pipe tables via BeautifulSoup
       - name: Convert HTML Tables to Markdown Pipe Tables
         run: |
           python3 - << 'EOF'
           import os, re
+          from bs4 import BeautifulSoup
 
-          def convert_html_tables(text):
-              def replace_table(match):
-                  html_snippet = match.group(0)
-                  rows = []
-                  for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', html_snippet, flags=re.DOTALL | re.IGNORECASE):
-                      cells = []
-                      for cell in re.findall(r'<(?:th|td)[^>]*>(.*?)</(?:th|td)>', tr, flags=re.DOTALL | re.IGNORECASE):
-                          # Strip nested tags, normalize whitespace, and escape pipe characters
-                          t = re.sub(r'<[^>]+>', ' ', cell)
-                          t = ' '.join(t.split()).replace('|', '\\|')
-                          cells.append(t)
-                      if cells:
-                          rows.append(cells)
-                  if not rows:
-                      return ''
-                  max_cols = max(len(r) for r in rows)
-                  for r in rows:
-                      while len(r) < max_cols:
-                          r.append('')
-                  header = rows[0]
-                  separator = ['---'] * max_cols
-                  body = rows[1:]
-                  lines = ['| ' + ' | '.join(header) + ' |', '| ' + ' | '.join(separator) + ' |']
-                  for r in body:
-                      lines.append('| ' + ' | '.join(r) + ' |')
-                  return '\n\n' + '\n'.join(lines) + '\n\n'
+          def html_table_to_markdown(table_soup):
+              rows = []
+              tr_elements = table_soup.find_all('tr')
+              
+              for tr in tr_elements:
+                  cells = []
+                  for cell in tr.find_all(['th', 'td']):
+                      # Replace <br> tags with spaces before extracting text
+                      for br in cell.find_all('br'):
+                          br.replace_with(' ')
+                      txt = cell.get_text(separator=' ', strip=True)
+                      txt = re.sub(r'\s+', ' ', txt).strip().replace('|', '\\|')
+                      cells.append(txt)
+                  if cells and any(c for c in cells):
+                      rows.append(cells)
 
-              return re.sub(r'<table[^>]*>.*?</table>', replace_table, text, flags=re.DOTALL | re.IGNORECASE)
+              if not rows:
+                  return ''
 
-          count = 0
+              max_cols = max(len(r) for r in rows)
+              if max_cols == 0:
+                  return ''
+
+              for r in rows:
+                  while len(r) < max_cols:
+                      r.append('')
+
+              header = [c if c else f'Col {i+1}' for i, c in enumerate(rows[0])]
+              separator = ['---'] * max_cols
+              body = rows[1:]
+              if not body:
+                  body = [[''] * max_cols]
+
+              lines = ['| ' + ' | '.join(header) + ' |', '| ' + ' | '.join(separator) + ' |']
+              for r in body:
+                  lines.append('| ' + ' | '.join(r) + ' |')
+
+              return '\n\n' + '\n'.join(lines) + '\n\n'
+
+          total_tables = 0
           for root, dirs, files in os.walk('.'):
               if any(skip in root for skip in ['_book', '_site', '.git']):
                   continue
@@ -71,23 +85,30 @@ jobs:
                       fpath = os.path.join(root, f)
                       with open(fpath, 'r', encoding='utf-8') as file:
                           content = file.read()
-                      if '<table' in content.lower():
-                          new_content = convert_html_tables(content)
-                          with open(fpath, 'w', encoding='utf-8') as file:
-                              file.write(new_content)
-                          count += 1
 
-          print(f"Finished table conversion across {count} chapters.")
+                      if '<table' in content.lower():
+                          soup = BeautifulSoup(content, 'html.parser')
+                          tables = soup.find_all('table')
+                          if tables:
+                              for table in tables:
+                                  md_tbl = html_table_to_markdown(table)
+                                  if md_tbl:
+                                      content = content.replace(str(table), md_tbl)
+                                      total_tables += 1
+                              with open(fpath, 'w', encoding='utf-8') as file:
+                                  file.write(content)
+                              print(f"[OK] Converted {len(tables)} table(s) in {fpath}")
+
+          print(f"Total HTML tables converted: {total_tables}")
           EOF
 
-      # Renders PDF with closed stdin (< /dev/null) to prevent any prompt freezes
+      # Render PDF with non-interactive flags and closed stdin
       - name: Render Master PDF
         id: render_pdf
-        timeout-minutes: 10
+        timeout-minutes: 15
         run: |
           quarto render --to pdf --verbose --pdf-engine-opt="-interaction=nonstopmode" --pdf-engine-opt="-halt-on-error" < /dev/null
 
-      # If rendering fails, dumps the exact error and line from the compiler log
       - name: Show LaTeX Log on Error
         if: always() && steps.render_pdf.outcome == 'failure'
         run: |
