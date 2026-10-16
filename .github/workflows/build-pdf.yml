@@ -27,158 +27,77 @@ jobs:
       - name: Set up TinyTeX
         uses: r-lib/actions/setup-tinytex@v2
 
-      - name: Install Python Table & Image Tools
-        run: pip install beautifulsoup4 markdownify requests pillow
-
-      # 1. Downloads all remote assets locally and converts tables
-      - name: Pre-process Tables and Localize Valid Images
+      # Converts HTML <table> blocks into Markdown pipe tables in < 1 second
+      - name: Convert HTML Tables to Markdown Pipe Tables
         run: |
           python3 - << 'EOF'
-          import os, re, requests
-          from bs4 import BeautifulSoup
-          from markdownify import markdownify as md
+          import os, re
 
-          os.makedirs('_pdf_assets', exist_ok=True)
-          headers = {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-              'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
-          }
+          def convert_html_tables(text):
+              def replace_table(match):
+                  html_snippet = match.group(0)
+                  rows = []
+                  for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', html_snippet, flags=re.DOTALL | re.IGNORECASE):
+                      cells = []
+                      for cell in re.findall(r'<(?:th|td)[^>]*>(.*?)</(?:th|td)>', tr, flags=re.DOTALL | re.IGNORECASE):
+                          t = re.sub(r'<[^>]+>', ' ', cell)
+                          t = ' '.join(t.split()).replace('|', '\\|')
+                          cells.append(t)
+                      if cells:
+                          rows.append(cells)
+                  if not rows:
+                      return ''
+                  max_cols = max(len(r) for r in rows)
+                  for r in rows:
+                      while len(r) < max_cols:
+                          r.append('')
+                  header = rows[0]
+                  separator = ['---'] * max_cols
+                  body = rows[1:]
+                  lines = ['| ' + ' | '.join(header) + ' |', '| ' + ' | '.join(separator) + ' |']
+                  for r in body:
+                      lines.append('| ' + ' | '.join(r) + ' |')
+                  return '\n\n' + '\n'.join(lines) + '\n\n'
 
-          def is_valid_image(data):
-              if data.startswith(b'\x89PNG\r\n\x1a\n'):
-                  return True
-              if data.startswith(b'\xff\xd8\xff'):
-                  return True
-              if data.startswith(b'GIF87a') or data.startswith(b'GIF89a'):
-                  return True
-              return False
+              return re.sub(r'<table[^>]*>.*?</table>', replace_table, text, flags=re.DOTALL | re.IGNORECASE)
 
-          def process_file(filepath):
-              with open(filepath, 'r', encoding='utf-8') as f:
-                  content = f.read()
-
-              modified = False
-
-              # Convert raw HTML <table> blocks into Markdown pipe tables
-              if '<table' in content.lower():
-                  soup = BeautifulSoup(content, 'html.parser')
-                  for table in soup.find_all('table'):
-                      md_table = md(str(table), strip=['style'])
-                      content = content.replace(str(table), f"\n\n{md_table.strip()}\n\n")
-                      modified = True
-
-              # Convert <img src="..." alt="..."> tags to Markdown syntax
-              img_tag_regex = r'<img\s+[^>]*src=["\']([^"\']+)["\'][^>]*>'
-              def replace_img(match):
-                  tag = match.group(0)
-                  soup = BeautifulSoup(tag, 'html.parser').find('img')
-                  if not soup:
-                      return match.group(0)
-                  src = soup.get('src', '')
-                  alt = soup.get('alt', 'Figure')
-                  return f"\n\n![{alt}]({src})\n\n"
-
-              if '<img' in content.lower():
-                  content = re.sub(img_tag_regex, replace_img, content, flags=re.IGNORECASE)
-                  modified = True
-
-              # Safely download GitHub attachment URLs
-              asset_regex = r'https://github\.com/user-attachments/assets/([a-zA-Z0-9-]+)'
-              matches = set(re.findall(asset_regex, content))
-              for uuid in matches:
-                  local_path = f"_pdf_assets/{uuid}.png"
-                  download_success = False
-
-                  if os.path.exists(local_path) and os.path.getsize(local_path) > 0:
-                      download_success = True
-                  else:
-                      url = f"https://github.com/user-attachments/assets/{uuid}"
-                      try:
-                          r = requests.get(url, headers=headers, timeout=25, allow_redirects=True)
-                          if r.status_code == 200 and is_valid_image(r.content):
-                              with open(local_path, 'wb') as out:
-                                  out.write(r.content)
-                              download_success = True
-                          else:
-                              print(f"Skipping asset {uuid}: invalid image format or HTTP status {r.status_code}")
-                      except Exception as e:
-                          print(f"Network error downloading asset {uuid}: {e}")
-
-                  if download_success:
-                      rel_path = os.path.relpath(local_path, os.path.dirname(filepath)).replace('\\', '/')
-                      content = re.sub(rf'https://github\.com/user-attachments/assets/{uuid}', rel_path, content)
-                      modified = True
-
-              if modified:
-                  with open(filepath, 'w', encoding='utf-8') as f:
-                      f.write(content)
-
+          count = 0
           for root, dirs, files in os.walk('.'):
-              if any(skip in root for skip in ['_book', '_site', '.git', '_pdf_assets']):
+              if any(skip in root for skip in ['_book', '_site', '.git']):
                   continue
               for f in files:
                   if f.endswith('.md') or f.endswith('.qmd'):
-                      process_file(os.path.join(root, f))
+                      fpath = os.path.join(root, f)
+                      with open(fpath, 'r', encoding='utf-8') as file:
+                          content = file.read()
+                      if '<table' in content.lower():
+                          new_content = convert_html_tables(content)
+                          with open(fpath, 'w', encoding='utf-8') as file:
+                              file.write(new_content)
+                          count += 1
 
-          print("Successfully processed tables and verified local assets.")
+          print(f"Finished table conversion. Converted tables across {count} chapters.")
           EOF
 
-      # 2. Generates master LaTeX file locally (~20 seconds)
-      - name: Render Book to LaTeX Source
-        run: quarto render --to latex --verbose
+      - name: Render Master PDF
+        run: quarto render --to pdf --verbose
 
-      # 3. Direct XeLaTeX execution with live streaming to console
-      - name: Compile PDF with XeLaTeX (Live Streaming)
-        run: |
-          TEX_FILE=$(find _book -name "*.tex" | head -n 1)
-          if [ -z "$TEX_FILE" ]; then
-            echo "ERROR: No .tex file found in _book!"
-            find . -name "*.tex"
-            exit 1
-          fi
-
-          TEX_DIR=$(dirname "$TEX_FILE")
-          TEX_BASE=$(basename "$TEX_FILE")
-          echo "Found LaTeX source: $TEX_BASE in $TEX_DIR"
-
-          cd "$TEX_DIR"
-
-          echo "=== PASS 1: Typesetting & Graphics Placement ==="
-          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
-
-          echo "=== PASS 2: Table of Contents & Cross-References ==="
-          xelatex -interaction=nonstopmode -halt-on-error "$TEX_BASE"
-
-          COMPILED_PDF=$(ls *.pdf | head -n 1)
-          echo "Successfully compiled: $COMPILED_PDF"
-          cp "$COMPILED_PDF" "$GITHUB_WORKSPACE/HabCam_SOP.pdf"
-
-      # 4. Runs on failure or cancellation to ensure you always see the log
-      - name: Show Compiler Log on Failure
-        if: always() && steps.compile.outcome == 'failure'
-        run: |
-          echo "=== SEARCHING COMPILER LOGS FOR ERRORS ==="
-          find _book -name "*.log" -exec grep -n -C 5 "^!" {} + || true
-          echo "=== DUMPING LAST 100 LINES OF LATEX LOG ==="
-          find _book -name "*.log" -exec tail -n 100 {} + || true
-
-      # 5. Commit master PDF to repository root
       - name: Save PDF to Repository Root
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          cp _book/*.pdf ./HabCam_SOP.pdf
           git add HabCam_SOP.pdf
-          git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf with images and tables [skip ci]"
+          git diff --staged --quiet || git commit -m "Update master HabCam_SOP.pdf with structured tables [skip ci]"
           git push
 
-      # 6. Render clean HTML website and bundle the master PDF
       - name: Render HTML and Prepare Site
         run: |
+          # Discard table modifications before building HTML website
           git checkout -- .
           quarto render --to html
           cp HabCam_SOP.pdf _book/HabCam_SOP.pdf
 
-      # 7. Deploy live to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
