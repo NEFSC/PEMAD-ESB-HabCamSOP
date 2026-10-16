@@ -43,13 +43,15 @@ jobs:
               'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
           }
 
+          stats = {'tables': 0, 'images': 0}
+
           def is_valid_image(data):
               return (
                   data.startswith(b'\x89PNG\r\n\x1a\n') or
                   data.startswith(b'\xff\xd8\xff') or
                   data.startswith(b'GIF87a') or
                   data.startswith(b'GIF89a') or
-                  (len(data) > 12 and data[:4] == b'RIFF' and data == b'WEBP')
+                  (len(data) > 12 and data[:4] == b'RIFF' and data[8:12] == b'WEBP')
               )
 
           def html_table_to_markdown(table_soup):
@@ -89,10 +91,7 @@ jobs:
               return '\n\n' + '\n'.join(lines) + '\n\n'
 
           def fix_markdown_lists(text):
-              # Replace non-breaking spaces and &nbsp;
               text = text.replace('\xa0', ' ').replace('&nbsp;', ' ')
-              
-              # Normalize arrow entities
               text = text.replace('&rarr;', '→')
 
               lines = text.split('\n')
@@ -107,7 +106,6 @@ jobs:
                       if fixed_lines and fixed_lines[-1].strip() != '' and not in_list:
                           fixed_lines.append('')
 
-                      # Normalize 1-space indentation to 2 spaces for nested lists
                       indent_match = re.match(r'^([ ]+)([-*+]\s+.*)', line)
                       if indent_match and len(indent_match.group(1)) == 1:
                           line = '  ' + indent_match.group(2)
@@ -122,7 +120,6 @@ jobs:
 
               return '\n'.join(fixed_lines)
 
-          # Find all markdown chapters
           all_files = []
           for root, dirs, files in os.walk('.'):
               if any(skip in root for skip in ['_book', '_site', '.git', '_pdf_assets']):
@@ -131,7 +128,6 @@ jobs:
                   if f.endswith('.md') or f.endswith('.qmd'):
                       all_files.append(os.path.join(root, f))
 
-          # 1. Download unique remote images
           remote_urls = set()
           for fpath in all_files:
               with open(fpath, 'r', encoding='utf-8') as f:
@@ -159,15 +155,10 @@ jobs:
                   except Exception as e:
                       print(f"[ERR] Download error for {url}: {e}")
 
-          # 2. Process and rewrite all chapters
-          tables_converted = 0
-          images_converted = 0
-
           for fpath in all_files:
               with open(fpath, 'r', encoding='utf-8') as f:
                   content = f.read()
 
-              # Convert HTML tables
               if '<table' in content.lower():
                   soup = BeautifulSoup(content, 'html.parser')
                   tables = soup.find_all('table')
@@ -176,11 +167,9 @@ jobs:
                           md_tbl = html_table_to_markdown(table)
                           if md_tbl:
                               content = content.replace(str(table), md_tbl)
-                              tables_converted += 1
+                              stats['tables'] += 1
 
-              # Convert <div align="center"><img ...> *Caption* </div> into Markdown images
               def replace_div_img(match):
-                  nonlocal images_converted
                   div_html = match.group(0)
                   soup = BeautifulSoup(div_html, 'html.parser')
                   img = soup.find('img')
@@ -190,7 +179,6 @@ jobs:
                   src = img.get('src', '').strip()
                   alt = img.get('alt', 'Figure').strip()
                   
-                  # Look for caption text inside the div
                   caption_tag = soup.find(['em', 'i', 'p'])
                   caption = caption_tag.get_text(strip=True) if caption_tag else alt
                   if not caption:
@@ -198,19 +186,17 @@ jobs:
 
                   if src in downloaded_map:
                       rel = os.path.relpath(downloaded_map[src], os.path.dirname(fpath)).replace('\\', '/')
-                      images_converted += 1
+                      stats['images'] += 1
                       return f"\n\n![{caption}]({rel})\n\n"
                   elif not src.startswith(('http://', 'https://')):
-                      images_converted += 1
+                      stats['images'] += 1
                       return f"\n\n![{caption}]({src})\n\n"
                   else:
                       return f"\n\n> *[{caption}]*\n\n"
 
               content = re.sub(r'<div\b[^>]*>\s*<img\b[^>]*>.*?</div>', replace_div_img, content, flags=re.DOTALL | re.IGNORECASE)
 
-              # Convert standalone <img ...> tags
               def replace_standalone_img(match):
-                  nonlocal images_converted
                   tag = match.group(0)
                   soup = BeautifulSoup(tag, 'html.parser').find('img')
                   if not soup:
@@ -220,36 +206,30 @@ jobs:
 
                   if src in downloaded_map:
                       rel = os.path.relpath(downloaded_map[src], os.path.dirname(fpath)).replace('\\', '/')
-                      images_converted += 1
+                      stats['images'] += 1
                       return f"\n\n![{alt}]({rel})\n\n"
                   elif not src.startswith(('http://', 'https://')):
-                      images_converted += 1
+                      stats['images'] += 1
                       return f"\n\n![{alt}]({src})\n\n"
                   else:
                       return f"\n\n> *[{alt}]*\n\n"
 
               content = re.sub(r'<img\s+[^>]*>', replace_standalone_img, content, flags=re.IGNORECASE)
-
-              # Clean up dangling <br> tags between divs
               content = re.sub(r'<br\s*/?>', '\n', content, flags=re.IGNORECASE)
-
-              # Fix lists and indentation
               content = fix_markdown_lists(content)
 
               with open(fpath, 'w', encoding='utf-8') as f:
                   f.write(content)
 
-          print(f"Pre-processing complete: {tables_converted} tables, {images_converted} images, and all lists fixed.")
+          print(f"Pre-processing complete: {stats['tables']} tables, {stats['images']} images, and all lists fixed.")
           EOF
 
-      # Render full PDF with non-interactive flags
       - name: Render Master PDF
         id: render_pdf
         timeout-minutes: 15
         run: |
           quarto render --to pdf --verbose --pdf-engine-opt="-interaction=nonstopmode" --pdf-engine-opt="-halt-on-error" < /dev/null
 
-      # Show LaTeX log if an error occurs
       - name: Show LaTeX Log on Error
         if: always() && steps.render_pdf.outcome == 'failure'
         run: |
