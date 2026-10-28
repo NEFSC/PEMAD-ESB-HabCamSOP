@@ -8,6 +8,8 @@
   <p style="margin:0;">Develop surveys, advanced technologies, and analytical approaches to inform stock and ecosystem assessments.</p>
 </div>
 
+## Marine Development
+
 ### Interactions with Offshore Wind
 Offshore wind energy developments impact at least **14 long-term scientific surveys** in the U.S. Northeast region (e.g., bottom trawl, scallop, ecosystem monitoring) through preclusion, habitat change, and survey design disruptions.
 
@@ -21,22 +23,22 @@ Offshore wind energy developments impact at least **14 long-term scientific surv
 
 ---
 
-## Key Technological Initiatives
+## Advanced Technology
 
-### 1. Long-Range AUV (LRAUV) Development
+### 1. Habitat Camera (HabCam) Survey
+* **System Overview:** The HABitat CAMera system (HABCAM) is a non-invasive, underwater imaging vehicle towed from the stern of research vessels approximately 2 meters above the seafloor, capturing high-resolution, overlapping stereo images.
+* **Sensor Suite:** The camera array is additionally equipped with a compass, CTD, sonar, and sensors that survey the seafloor, which can be used for estimates of species abundance, habitat characterization, and biodiversity—giving a holistic view of benthic taxa.
+* **Resource Monitoring:** This vehicle has been used extensively for surveying the sea scallop resource on Georges Bank and the Mid-Atlantic Bight, as well as collecting data on finfish and habitat.
+
+### 2. Long-Range AUV (LRAUV) Development
 * **Platform & Payload:** Developed in collaboration with MBARI and WHOI, incorporating dual stereo camera payloads to mimic the Habitat Camera (HabCam) setup.
 * **Objectives:** Access wind farm lease areas and reduce total days at sea required for HabCam survey coverage.
 * **2024 Deployments:** Sampled over 200 nautical miles in May and June 2024. Calibrations with dredge and HabCam V4 showed no significant bias in scallop shell height measurements.
 * **Nearshore & Offshore Operations:** Successfully tested operating from small vessels nearshore (e.g., South Fork Wind Farm in November 2024).
 
-### 2. Uncrewed Surface Vehicles (USV - DriX)
+### 3. Uncrewed Surface Vehicles (USV - DriX)
 * **Operational Value:** Designed to sample close (20–30 meters) to wind turbine structures, operate 24/7 safely, and maneuver efficiently around complex installations.
 * **Missions:** Conducted a 20-day survey covering three offshore wind areas (including Block Island, Cox Ledge, and Vineyard Wind) in late 2023. Continued sampling scheduled focusing on North Atlantic right whale forage habitat questions.
-
-### 3. Habitat Camera (HabCam) Survey
-* **System Overview:** The HABitat CAMera system (HABCAM) is a non-invasive, underwater imaging vehicle towed from the stern of research vessels approximately 2 meters above the seafloor, capturing high-resolution, overlapping stereo images.
-* **Sensor Suite:** The camera array is additionally equipped with a compass, CTD, sonar, and sensors that survey the seafloor, which can be used for estimates of species abundance, habitat characterization, and biodiversity—giving a holistic view of benthic taxa.
-* **Resource Monitoring:** This vehicle has been used extensively for surveying the sea scallop resource on Georges Bank and the Mid-Atlantic Bight, as well as collecting data on finfish and habitat.
 
 ### 4. Machine Learning & Optical Enhancements
 * **Automated Processing:** Developing machine learning tools (e.g., VIAME software) under the NOAA Inflation Reduction Act (IRA) Optical Strategic Initiative to automate scallop identification and measurements, replacing manual annotation.
