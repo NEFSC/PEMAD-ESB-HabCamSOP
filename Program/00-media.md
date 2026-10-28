@@ -4,69 +4,100 @@ Public feature stories, field dispatches, press releases, and multimedia article
 
 ---
 
-### Meet the Autonomous Underwater Robot Expanding Our Ability to Survey the Seafloor {.unnumbered .unlisted}
+### Long-Running Sea Scallop Survey Diversifies for the Future {.unnumbered .unlisted}
 
-![Two Long-Range Autonomous Underwater Vehicles (Stella and Polaris) configured with HabCam stereo-camera payloads on deck.](https://www.fisheries.noaa.gov/s3/2026-06/1500x1068-habcam_recovery-2026-nefsc.jpg){fig-align="center" width="70%"}
+<img width="800" height="533" alt="Media_1" src="https://github.com/user-attachments/assets/095b6b12-c5b9-4465-b8e5-13172bfaf044" />
 
 > **Source:** NOAA Fisheries Feature Story  
-> **Date:** August 2026  
-> **Direct Link:** [Read Feature on NOAA Fisheries](https://www.fisheries.noaa.gov/feature-story/meet-autonomous-underwater-robot-expanding-our-ability-survey-seafloor)
+> **Date:** April 2025  
+> **Photo Credit:** NOAA Fisheries / Dvora Hart  
+> **Direct Link:** [Read Feature on NOAA Fisheries](https://www.fisheries.noaa.gov/feature-story/long-running-sea-scallop-survey-diversifies-future)
 
-Highlights the deployment of Tethys-class Long-Range Autonomous Underwater Vehicles (LRAUVs *Stella* and *Polaris*) carrying HabCam optical sensor packages. Developed in partnership with WHOI and MBARI, these platforms survey offshore wind development areas inaccessible to traditional towed vessels, complementing HabCam V4 shipboard operations with persistent, phone-controlled subsea navigation.
+Explores the modern transition of the Atlantic sea scallop survey portfolio, detailing how HabCam V4 was integrated aboard the *NOAA Ship Henry B. Bigelow* to operate alongside industry dredge vessels and autonomous survey platforms to maintain multi-decadal stock assessment time series.
+
+---
+
+### Habitat Camera System: Surveying the Seafloor in High Definition {.unnumbered .unlisted}
+
+<img width="1500" height="1068" alt="Media_2" src="https://github.com/user-attachments/assets/7da7ee7e-2fc7-427f-81af-935d08053e01" />
+
+> **Source:** NOAA Fisheries Science & Data  
+> **Date:** June 2024  
+> **Photo Credit:** NOAA Fisheries  
+> **Direct Link:** [Visit NOAA HabCam Program Overview](https://www.fisheries.noaa.gov/new-england-mid-atlantic/science-data/habitat-camera-survey)
+
+A comprehensive field profile detailing HabCam's non-invasive towed stereo-camera imaging system, real-time sensor array (CTD, fluorometer, altimeters), and how optical data informs management decisions under the New England Fishery Management Council.
 
 ---
 
 ### Take Nothing But Pictures: Spying on Georges Bank's Scallops {.unnumbered .unlisted}
 
-![Communications specialist Kristen Jabanoski piloting the HabCam vehicle at the acoustic lab flight station.](https://www.fisheries.noaa.gov/s3/styles/original/s3/2024-09/750x500-deploying-habcam-2024-nefsc.jpg?itok=hBjo3BN7){fig-align="center" width="70%"}
+<img width="750" height="500" alt="Media_3" src="https://github.com/user-attachments/assets/7be10b9b-1221-431e-b5ac-432dbdb0877a" />
 
 > **Source:** NOAA Fisheries Field Fresh Science Blog  
 > **Date:** July 2026  
+> **Photo Credit:** NOAA Fisheries / John Rosendale  
 > **Direct Link:** [Read Dispatch on NOAA Fisheries](https://www.fisheries.noaa.gov/science-blog/take-nothing-pictures-spying-georges-banks-scallops)
 
 A first-hand operational account from aboard the *R/V Henry B. Bigelow* during Leg 2 of the 2026 HabCam survey across Nantucket Lightship, the Great South Channel, and Georges Bank. Details the realities of 24-hour watchstanding, dynamic winch piloting to dodge boulders and sand waves, foul-weather late spring snowstorms, and real-time image annotation.
 
 ---
 
-### Long-Running Sea Scallop Survey Diversifies for the Future {.unnumbered .unlisted}
-
-![HabCam V4 being lowered from the stern A-frame during twilight operations.](https://www.fisheries.noaa.gov/s3/2022-06/600x709-HabCamNight-2022-scallopsurvey-nefsc.png){fig-align="center" width="70%"}
-
-> **Source:** NOAA Fisheries News & Announcements  
-> **Date:** April 2025  
-> **Direct Link:** [Read Story on NOAA Fisheries](https://www.fisheries.noaa.gov/feature-story/long-running-sea-scallop-survey-diversifies-future)
-
-Explores the modern transition of the Atlantic sea scallop survey portfolio, discussing how HabCam V4 was integrated aboard the *NOAA Ship Henry B. Bigelow* to operate alongside industry dredge vessels and autonomous survey platforms to maintain multi-decadal stock assessment time series.
-
----
-
 ### Right Place at the Right Time for a Right Whale {.unnumbered .unlisted}
 
-![WHOI and NOAA personnel inspect HabCam instrumentation and autonomous vehicle systems on deck.](https://www.fisheries.noaa.gov/s3/2026-06/1500x1068-habcam_recovery-2026-nefsc.jpg){fig-align="center" width="70%"}
+<img width="750" height="500" alt="Media_4" src="https://github.com/user-attachments/assets/833dcbed-89fa-4f79-9c3b-e353c9b166a3" />
 
 > **Source:** NOAA Fisheries Science Blog (Field Fresh: Science in Motion)  
 > **Date:** November 2024  
+> **Photo Credit:** NOAA Fisheries / Zach Fyke  
 > **Direct Link:** [Read Blog on NOAA Fisheries](https://www.fisheries.noaa.gov/science-blog/my-top-scallop-survey-moment-right-place-right-time-right-whale)
 
 Biological Science Technician Zach Fyke reflects on standing watch across all three legs of the annual survey, pairing HabCam V4 sled transects with LRAUV *Stella* deployments to survey high-density beds while encountering rare North Atlantic right whales and offshore pelagic wildlife.
 
 ---
 
-### Integrated Sea Scallop and HabCam Research Survey Completes Annual Cycle {.unnumbered .unlisted}
+### Scallop Survey "HabCamming" and "Round the Clock Dredging" {.unnumbered .unlisted}
 
-![Freshly landed Atlantic sea scallops showing variations in shell pigmentation.](https://www.fisheries.noaa.gov/s3/styles/original/s3/2024-09/750x500-deploying-habcam-2024-nefsc.jpg?itok=hBjo3BN7){fig-align="center" width="70%"}
+<img width="750" height="500" alt="Media_5" src="https://github.com/user-attachments/assets/67e4375c-7683-48fd-ac5a-a5bfceaf7e9b" />
 
-> **Source:** NOAA Fisheries Science & Data Reports  
-> **Date:** June 2022  
-> **Direct Link:** [Read Cruise Summary on NOAA Fisheries](https://www.fisheries.noaa.gov/feature-story/2022-noaa-northeast-sea-scallop-survey-results)
+> **Source:** NOAA Fisheries Science Blog (Field Fresh: Science in Motion)  
+> **Date:** June 30, 2022  
+> **Photo Credit:** NOAA Fisheries / Christine Kircun  
+> **Direct Link:** [Read Dispatch on NOAA Fisheries](https://www.fisheries.noaa.gov/science-blog/scallop-survey-habcamming-and-round-clock-dredging)
 
-A comprehensive field debrief from aboard the *R/V Hugh R. Sharp* logging 29 days at sea, 300+ nautical miles of photographic trackline in the Great South Channel and Closed Area I, and the collaborative operational workflow uniting NEFSC, Coonamessett Farm Foundation (CFF), and VIMS.
+A field dispatch from the final leg of the 2022 survey aboard the *R/V Hugh R. Sharp*, detailing calm night-shift HabCamming runs, cable strain-relief maintenance with the chief scientist, and transitioning into 24-hour biological sorting on deck.
+
+---
+
+### Bottom Types and Record Numbers: Scallop Survey Finale {.unnumbered .unlisted}
+
+<img width="750" height="500" alt="Media_6" src="https://github.com/user-attachments/assets/0bdee29c-fbe2-45f9-b280-f31cbb6add5a" />
+
+> **Source:** NOAA Fisheries Science Blog (Field Fresh: Science in Motion)  
+> **Date:** July 2022  
+> **Photo Credit:** NOAA Fisheries / Christine Kircun  
+> **Direct Link:** [Read Dispatch on NOAA Fisheries](https://www.fisheries.noaa.gov/science-blog/bottom-types-and-record-numbers-scallop-survey-finale)
+
+A look at at-sea annotation workflows as the science party reviews 10-minute image batches while sheltering from weather near Martha's Vineyard, noting substrate shifts and massive recruitment cohorts across the continental shelf.
+
+---
+
+### Meet the Autonomous Underwater Robot Expanding Our Ability to Survey the Seafloor {.unnumbered .unlisted}
+
+<img width="800" height="601" alt="Media_7" src="https://github.com/user-attachments/assets/28c5042e-27e5-43c2-b3ea-0c50910afc7c" />
+
+> **Source:** NOAA Fisheries Feature Story  
+> **Date:** August 2026  
+> **Photo Credit:** NOAA Fisheries  
+> **Direct Link:** [Read Feature on NOAA Fisheries](https://www.fisheries.noaa.gov/feature-story/meet-autonomous-underwater-robot-expanding-our-ability-survey-seafloor)
+
+Highlights the deployment of Tethys-class Long-Range Autonomous Underwater Vehicles (LRAUVs *Stella* and *Polaris*) carrying HabCam optical sensor packages. Developed in partnership with WHOI and MBARI, these platforms survey offshore wind development areas inaccessible to traditional towed vessels.
 
 ---
 
 ### A New Eye on Deep-Sea Fisheries {.unnumbered .unlisted}
 
-![Jack Cook cutaway diagram illustrating the HabCam towed camera sled flight trajectory over benthic habitat.](https://www.fisheries.noaa.gov/s3/2022-06/600x709-HabCamNight-2022-scallopsurvey-nefsc.png){fig-align="center" width="70%"}
+<img width="1920" height="1080" alt="Media_8" src="https://github.com/user-attachments/assets/863e01e3-27cc-4e0b-a863-813b3dd7abd3" />
 
 > **Source:** Woods Hole Oceanographic Institution (*Oceanus* Magazine)  
 > **Date:** June 2016  
@@ -76,36 +107,12 @@ Authored by Lonny Lippsett, this feature covers the foundational development of 
 
 ---
 
-### HABCAM: A Window to the Sea Floor {.unnumbered .unlisted}
-
-![HabCam frame secured in the workshop displaying cameras, strobes, and sensor pressure bottles.](https://www.fisheries.noaa.gov/s3/2026-06/1500x1068-habcam_recovery-2026-nefsc.jpg){fig-align="center" width="70%"}
-
-> **Source:** Woods Hole Oceanographic Institution (*Oceanus* Magazine)  
-> **Date:** January 2016  
-> **Direct Link:** [Read Feature on WHOI Oceanus](https://www.whoi.edu/oceanus/feature/habcam/)
-
-An investigative overview by Elise Hugus chronicling how marine engineers transformed commercial fishing vessel partnerships into a high-tech optical mapping program. Covers the mechanics of continuous stereo imaging and the development of automated computer-vision algorithms to classify benthic substrates.
-
----
-
 ### Camera's Eye Sees Large Numbers of Young Scallops Off Delaware Bay {.unnumbered .unlisted}
 
-![Seafloor mosaic composed of HabCam stereo pairs showing dense aggregation of juvenile sea scallops.](https://www.fisheries.noaa.gov/s3/styles/original/s3/2024-09/750x500-deploying-habcam-2024-nefsc.jpg?itok=hBjo3BN7){fig-align="center" width="70%"}
+<img width="750" height="1647" alt="Media_9" src="https://github.com/user-attachments/assets/6df00b6f-4679-4a2d-808e-df7ffe053742" />
 
 > **Source:** Woods Hole Oceanographic Institution Press Room  
 > **Date:** June 2015  
 > **Direct Link:** [Read News Release on WHOI.edu](https://www.whoi.edu/press-room/news-release/habcamscallopsurvey/)
 
 A landmark press release announcing the discovery of a massive recruitment event of juvenile sea scallops 80 miles off Delaware Bay. Highlights the capacity of HabCam V4 to collect six stereo image pairs per second (exceeding one million images per day) to detect cohort spikes invisible to sparse dredge sampling.
-
----
-
-### Seafloor Explorer: Crowdsourcing Benthic Ecology {.unnumbered .unlisted}
-
-![Annotators and citizen scientists reviewing optical transect frames online.](https://www.fisheries.noaa.gov/s3/2022-06/600x709-HabCamNight-2022-scallopsurvey-nefsc.png){fig-align="center" width="70%"}
-
-> **Source:** WHOI & NOAA Public Announcement  
-> **Date:** September 2012  
-> **Direct Link:** [Read Press Release on WHOI.edu](https://www.whoi.edu/press-room/news-release/seafloorexplorer/)
-
-Details the public launch of *Seafloor Explorer*, a citizen science partnership with Zooniverse. The project opened hundreds of thousands of raw HabCam continental shelf images to the public, allowing citizen scientists to identify scallops, fish, and ground types to help train machine learning models and validate abundance estimates.
