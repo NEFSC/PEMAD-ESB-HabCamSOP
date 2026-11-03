@@ -32,6 +32,10 @@
   Vanaki, S., Hart, D. R., & Chang, J.-H. (2025). How many dollars are in the sea? Estimating sand dollar (*Echinarachnius parma*) abundance using an iteratively trained convolutional neural network and generalized additive models. *Ecological Informatics*, 90, 103311.  
   [https://repository.library.noaa.gov/view/noaa/72198](https://repository.library.noaa.gov/view/noaa/72198)
 
+* **Lowe et al. (2025)**  
+  Lowe, S. C., Misiuk, B., Xu, I., Abdulazizov, S., Baroi, A. R., Bastos, A. C., ..., Hart, D. R., ..., Brown, C. J., & Trappenberg, T. (2025). BenthicNet: A global compilation of seafloor images for deep learning applications. *Scientific Data*, 12(1), 230.  
+  [https://www.nature.com/articles/s41597-025-04491-1](https://www.nature.com/articles/s41597-025-04491-1)
+
 ---
 
 ## 2. Resource Survey Reports
