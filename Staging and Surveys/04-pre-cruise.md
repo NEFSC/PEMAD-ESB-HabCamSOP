@@ -111,7 +111,47 @@ toc-depth: 3
 
 #### CTD & ECO-Triplet Calibration Shipments (RMA) {#sec-6mo-ctd-calibration}
 
-*[Insert RMA submission instructions, packaging requirements, Sea-Bird/WET Labs shipping addresses, and tracking protocols]*
+1. Create a Sea-Bird Scientific account or log in via the [Sea-Bird Customer Portal](https://d7000000096pteaq.my.site.com/seabirdcustomer/s/login/).
+2. Navigate to **Accounts** and select the **NEFSC account**.
+3. Click **Create New RMA**.
+4. Set Location to **Bellevue**.
+5. Add your personal Contact Information. The **Bill To/Ship To** fields should prefill with the NEFSC Woods Hole Address. 
+6. Add the NEFSC Woods Hole Address to **End User Information**.
+7. Leave Payment Info and Technical Support Case blank (unless there are separate hardware issues that must be addressed).
+
+**Other Service Details Settings:**
+- **Preliminary Quote:** Yes
+- **New Antifoulant:** Yes
+- **Quote for Return Shipping:** Yes
+- **Ship 3rd Party Sensors for Service:** N/A
+- **Requested Return Ship Date:** April 1st *(of the upcoming survey year)*
+- **Deployment Date:** May 1st *(of the upcoming survey year)*
+- **Split Shipments:** Return Items in One Shipment
+- **Shipping Courier:** FedEx
+- **Shipping Weight and Dimensions:** *(Leave blank or enter crate specifics)*
+- **Additional Information:** *(List any specific operational issues from the previous cruise here)*
+
+**Instruments & Required Services Table:**
+
+| Sensor | Serial Number | Service Code | Service Description |
+| :--- | :--- | :--- | :--- |
+| **Eco-Triplet** | BBFL2-627 | `SBS-SVC-ECOTRIPLE` | Comprehensive service for triple channel ECOs. Does not include optics head replacement (FRRF). |
+| **Eco-Triplet** | BBFL2-627 | `SBS-SVC-ECOPCALTRIPLE` | Post-cruise calibration for three channel ECO (FRRF). |
+| **SBE 37-9271 CTD** | 37SIP.35201 | `SBS-SVC-37` | Comprehensive service/calibration of SBE 37. Includes room temperature pressure characterization (FRRF). |
+| **SBE 37-9271 CTD** | 37SIP.35201 | `REPLACEAF` | Extra charge to install one antifoulant device, includes one PN 801542.1 (FRRF). |
+| **SBE 49 FastCAT CTD** | 4964291-0243 | `SBS-SVC-49` | Comprehensive service/calibration of SBE 49 (FRRF). |
+| **SBE 49 FastCAT CTD** | 4964291-0243 | `REPLACEAF` | Extra charge to install one antifoulant device, includes one PN 801542.1 (FRRF). |
+
+**Labeling and Domestic Shipment Instructions:**
+Print the RMA confirmation email and include a copy inside all crates. Label the exterior of the crate(s) with the assigned **RMA Number** (e.g., RMA #00003349) to prevent processing delays.
+
+Ship prepaid (via FedEx, DHL, UPS, etc.) directly to:
+> **Sea-Bird Electronics, Inc.**  
+> c/o RMA #[Insert Your RMA Number]  
+> 13431 NE 20th Street  
+> Bellevue, WA 98005, USA  
+> Phone: +1-425-643-9866  
+> E-mail: service@seabird.com
 
 #### Equipment & Supply Procurement {#sec-6mo-procurement}
 
